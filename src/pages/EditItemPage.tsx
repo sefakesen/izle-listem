@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import EmptyState from '../components/EmptyState'
 import PageHeading from '../components/PageHeading'
 import WatchItemForm from '../components/WatchItemForm'
+import { IconFilm } from '../components/icons'
 import { useToast } from '../context/ToastContext'
 import { useWatchlist } from '../context/WatchlistContext'
 import type { WatchItemInput } from '../interfaces/WatchItem'
@@ -17,12 +18,12 @@ export default function EditItemPage() {
   if (!item) {
     return (
       <EmptyState
-        icon="🤷"
+        icon={<IconFilm className="h-8 w-8 text-neutral-400" />}
         title="Kayıt bulunamadı"
-        description="Düzenlemek istediğin kayıt silinmiş ya da hiç var olmamış olabilir."
+        description="Düzenlemek istediğiniz kayıt silinmiş veya bulunamıyor olabilir."
         action={
-          <Link to="/" className="btn-primary">
-            Listeye dön
+          <Link to="/" className="btn-primary py-2 text-xs">
+            Koleksiyona dön
           </Link>
         }
       />

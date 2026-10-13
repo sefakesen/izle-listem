@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { IconTrash } from './icons'
 
 interface ConfirmDialogProps {
   open: boolean
@@ -32,7 +33,7 @@ export default function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
       onClick={onCancel}
     >
       <div
@@ -40,23 +41,23 @@ export default function ConfirmDialog({
         aria-modal="true"
         aria-labelledby="confirm-title"
         aria-describedby="confirm-desc"
-        className="card w-full max-w-sm animate-pop-in p-6 shadow-2xl"
+        className="card w-full max-w-sm animate-pop-in p-6 shadow-2xl bg-[#13161c] border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/15 text-2xl">
-          🗑️
+        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
+          <IconTrash className="h-5 w-5" />
         </div>
-        <h2 id="confirm-title" className="text-lg font-bold">
+        <h2 id="confirm-title" className="text-base font-semibold text-white">
           {title}
         </h2>
-        <p id="confirm-desc" className="mt-1 text-sm text-slate-400">
+        <p id="confirm-desc" className="mt-1.5 text-xs text-neutral-400 leading-relaxed">
           {description}
         </p>
-        <div className="mt-6 flex justify-end gap-3">
-          <button ref={cancelRef} type="button" className="btn-ghost" onClick={onCancel}>
+        <div className="mt-6 flex justify-end gap-2.5">
+          <button ref={cancelRef} type="button" className="btn-ghost py-2 text-xs" onClick={onCancel}>
             Vazgeç
           </button>
-          <button type="button" className="btn-danger" onClick={onConfirm}>
+          <button type="button" className="btn-danger py-2 text-xs px-4" onClick={onConfirm}>
             {confirmLabel}
           </button>
         </div>

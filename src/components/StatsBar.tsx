@@ -1,4 +1,5 @@
 import type { WatchItem } from '../interfaces/WatchItem'
+import { IconCheck, IconClock, IconLayers, IconPlay, IconStar } from './icons'
 
 /** Liste özet istatistikleri */
 export default function StatsBar({ items }: { items: WatchItem[] }) {
@@ -8,26 +9,36 @@ export default function StatsBar({ items }: { items: WatchItem[] }) {
     : '–'
 
   const stats = [
-    { label: 'Toplam', value: items.length, icon: '🎞️', accent: 'text-slate-100' },
+    {
+      label: 'Toplam Arşiv',
+      value: items.length,
+      icon: <IconLayers className="h-4 w-4 text-neutral-300" />,
+      accent: 'text-neutral-100',
+    },
     {
       label: 'İzlenecek',
       value: items.filter((i) => i.status === 'izlenecek').length,
-      icon: '⏳',
-      accent: 'text-sky-300',
+      icon: <IconClock className="h-4 w-4 text-zinc-400" />,
+      accent: 'text-zinc-200',
     },
     {
       label: 'İzleniyor',
       value: items.filter((i) => i.status === 'izleniyor').length,
-      icon: '▶️',
-      accent: 'text-amber-300',
+      icon: <IconPlay className="h-4 w-4 text-[#d4af37]" />,
+      accent: 'text-amber-200/90',
     },
     {
       label: 'İzlendi',
       value: items.filter((i) => i.status === 'izlendi').length,
-      icon: '✅',
-      accent: 'text-emerald-300',
+      icon: <IconCheck className="h-4 w-4 text-emerald-400" />,
+      accent: 'text-emerald-200/90',
     },
-    { label: 'Ort. Puan', value: average, icon: '⭐', accent: 'text-amber-400' },
+    {
+      label: 'Ort. Puan',
+      value: average,
+      icon: <IconStar filled className="h-4 w-4 text-[#e5b869]" />,
+      accent: 'text-[#e5b869]',
+    },
   ]
 
   return (
@@ -35,14 +46,14 @@ export default function StatsBar({ items }: { items: WatchItem[] }) {
       {stats.map((s, i) => (
         <div
           key={s.label}
-          className={`card flex items-center gap-3 p-4 ${i === 0 ? 'col-span-2 sm:col-span-1' : ''}`}
+          className={`card flex items-center gap-3.5 p-3.5 ${i === 0 ? 'col-span-2 sm:col-span-1' : ''}`}
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xl">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06]">
             {s.icon}
-          </span>
+          </div>
           <div>
-            <p className={`text-2xl font-black leading-none ${s.accent}`}>{s.value}</p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-500">
+            <p className={`text-xl font-bold tracking-tight leading-none ${s.accent}`}>{s.value}</p>
+            <p className="mt-1 text-[11px] font-medium tracking-wider text-neutral-400">
               {s.label}
             </p>
           </div>

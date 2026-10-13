@@ -3,8 +3,10 @@ import { Link } from 'react-router'
 import ConfirmDialog from '../components/ConfirmDialog'
 import EmptyState from '../components/EmptyState'
 import FilterBar from '../components/FilterBar'
+import ItemDetailModal from '../components/ItemDetailModal'
 import StatsBar from '../components/StatsBar'
 import WatchItemCard from '../components/WatchItemCard'
+import { IconFilm, IconPlus, IconSearch } from '../components/icons'
 import { useToast } from '../context/ToastContext'
 import { useWatchlist } from '../context/WatchlistContext'
 import type { WatchFilters, WatchItem, WatchStatus } from '../interfaces/WatchItem'
@@ -27,6 +29,7 @@ export default function HomePage() {
   const { notify } = useToast()
   const [filters, setFilters] = useState<WatchFilters>(DEFAULT_FILTERS)
   const [pendingDelete, setPendingDelete] = useState<WatchItem | null>(null)
+  const [selectedItem, setSelectedItem] = useState<WatchItem | null>(null)
 
   const visibleItems = useMemo(() => {
     const query = normalize(filters.search)
@@ -59,14 +62,29 @@ export default function HomePage() {
     (id: string, status: WatchStatus) => {
       setStatus(id, status)
       notify(`Durum "${STATUS_META[status].label}" olarak güncellendi.`, 'info')
+      // Eğer modal açıksa güncel nesneyi yenile
+      setSelectedItem((current) => (current && current.id === id ? { ...current, status } : current))
     },
     [setStatus, notify],
+  )
+
+  const handleToggleFavorite = useCallback(
+    (id: string) => {
+      toggleFavorite(id)
+      setSelectedItem((current) =>
+        current && current.id === id ? { ...current, favorite: !current.favorite } : current,
+      )
+    },
+    [toggleFavorite],
   )
 
   const confirmDelete = () => {
     if (!pendingDelete) return
     deleteItem(pendingDelete.id)
     notify(`"${pendingDelete.title}" listeden silindi.`)
+    if (selectedItem?.id === pendingDelete.id) {
+      setSelectedItem(null)
+    }
     setPendingDelete(null)
   }
 
@@ -76,17 +94,18 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-white/[0.06] pb-6">
         <div>
-          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
-            İzleme Listem <span className="inline-block animate-pop-in">🍿</span>
+          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            İzleme Koleksiyonum
           </h1>
-          <p className="mt-1 text-slate-400">
-            Filmlerini ve dizilerini tek yerden takip et. Veriler tarayıcında saklanır.
+          <p className="mt-1 text-xs text-neutral-400">
+            Film ve dizilerinizi takip edin, puanlayın ve kişisel arşivinizi yönetin.
           </p>
         </div>
-        <Link to="/ekle" className="btn-primary self-start sm:self-auto">
-          ＋ Film / Dizi Ekle
+        <Link to="/ekle" className="btn-primary self-start sm:self-auto py-2.5 text-xs">
+          <IconPlus className="h-4 w-4" />
+          <span>Film / Dizi Ekle</span>
         </Link>
       </section>
 
@@ -94,11 +113,13 @@ export default function HomePage() {
 
       {items.length === 0 ? (
         <EmptyState
-          title="Listen henüz boş"
-          description="İzlemek istediğin ilk filmi ya da diziyi ekleyerek başla."
+          icon={<IconFilm className="h-8 w-8 text-[#c5a880]" />}
+          title="Koleksiyonunuz henüz boş"
+          description="İzlemek istediğiniz veya izlediğiniz ilk filmi ya da diziyi ekleyerek başlayın."
           action={
-            <Link to="/ekle" className="btn-primary">
-              ＋ İlk kaydını ekle
+            <Link to="/ekle" className="btn-primary py-2.5 text-xs">
+              <IconPlus className="h-4 w-4" />
+              <span>İlk Kaydı Ekle</span>
             </Link>
           }
         />
@@ -108,13 +129,13 @@ export default function HomePage() {
 
           {visibleItems.length === 0 ? (
             <EmptyState
-              icon="🔎"
-              title="Sonuç bulunamadı"
-              description="Arama ya da filtre kriterlerine uyan kayıt yok."
+              icon={<IconSearch className="h-7 w-7 text-neutral-400" />}
+              title="Aramaya uygun kayıt bulunamadı"
+              description="Arama teriminizi veya filtre kriterlerinizi değiştirip tekrar deneyin."
               action={
                 hasActiveFilters && (
-                  <button type="button" className="btn-ghost" onClick={() => setFilters(DEFAULT_FILTERS)}>
-                    Filtreleri temizle
+                  <button type="button" className="btn-ghost py-2 text-xs" onClick={() => setFilters(DEFAULT_FILTERS)}>
+                    Filtreleri Temizle
                   </button>
                 )
               }
@@ -126,8 +147,9 @@ export default function HomePage() {
                   key={item.id}
                   item={item}
                   onDelete={setPendingDelete}
-                  onToggleFavorite={toggleFavorite}
+                  onToggleFavorite={handleToggleFavorite}
                   onStatusChange={handleStatusChange}
+                  onSelect={setSelectedItem}
                 />
               ))}
             </section>
@@ -135,10 +157,20 @@ export default function HomePage() {
         </>
       )}
 
+      {/* Kayıt Detayları Modalı */}
+      <ItemDetailModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onDelete={setPendingDelete}
+        onToggleFavorite={handleToggleFavorite}
+        onStatusChange={handleStatusChange}
+      />
+
+      {/* Güvenli Silme Onay Penceresi */}
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Kaydı sil"
-        description={`"${pendingDelete?.title ?? ''}" listenden kalıcı olarak silinecek. Emin misin?`}
+        title="Kaydı silmek istiyor musunuz?"
+        description={`"${pendingDelete?.title ?? ''}" listenden kalıcı olarak kaldırılacaktır.`}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />

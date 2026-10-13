@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { WatchItem, WatchItemInput, WatchStatus } from '../interfaces/WatchItem'
+import { sampleItems } from '../utils/sampleData'
 import { createId, loadItems, saveItems } from '../utils/storage'
 
 /**
@@ -21,6 +22,9 @@ interface WatchlistContextValue {
   toggleFavorite: (id: string) => void
   setStatus: (id: string, status: WatchStatus) => void
   clearAll: () => void
+  /** YEDEKLEME & YENİDEN YÜKLEME */
+  importItems: (newItems: WatchItem[]) => void
+  resetToSamples: () => void
 }
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null)
@@ -72,9 +76,28 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
 
   const clearAll = useCallback(() => setItems([]), [])
 
+  const importItems = useCallback((newItems: WatchItem[]) => {
+    setItems(newItems)
+  }, [])
+
+  const resetToSamples = useCallback(() => {
+    setItems(sampleItems)
+  }, [])
+
   const value = useMemo(
-    () => ({ items, addItem, getItem, updateItem, deleteItem, toggleFavorite, setStatus, clearAll }),
-    [items, addItem, getItem, updateItem, deleteItem, toggleFavorite, setStatus, clearAll],
+    () => ({
+      items,
+      addItem,
+      getItem,
+      updateItem,
+      deleteItem,
+      toggleFavorite,
+      setStatus,
+      clearAll,
+      importItems,
+      resetToSamples,
+    }),
+    [items, addItem, getItem, updateItem, deleteItem, toggleFavorite, setStatus, clearAll, importItems, resetToSamples],
   )
 
   return <WatchlistContext.Provider value={value}>{children}</WatchlistContext.Provider>

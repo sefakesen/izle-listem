@@ -13,7 +13,7 @@ export default function AddItemPage() {
 
   const handleSubmit = (values: WatchItemInput) => {
     addItem(values)
-    notify(`"${values.title}" listene eklendi.`)
+    notify(`"${values.title}" koleksiyonunuza eklendi.`)
     navigate('/')
   }
 
@@ -21,9 +21,9 @@ export default function AddItemPage() {
     <div className="space-y-6">
       <PageHeading
         title="Yeni Film / Dizi Ekle"
-        description="İzlediğin ya da izlemek istediğin bir yapımı listene ekle."
+        description="İzlediğiniz ya da izlemek istediğiniz bir yapımı koleksiyonunuza ekleyin."
       />
-      <WatchItemForm submitLabel="Listeye Ekle" onSubmit={handleSubmit} onCancel={() => navigate(-1)} />
+      <WatchItemForm submitLabel="Koleksiyona Ekle" onSubmit={handleSubmit} onCancel={() => navigate(-1)} />
     </div>
   )
 }

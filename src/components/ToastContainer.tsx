@@ -1,13 +1,19 @@
 import { useToast } from '../context/ToastContext'
-
-const VARIANTS = {
-  success: { icon: '✅', ring: 'ring-emerald-500/30' },
-  error: { icon: '⚠️', ring: 'ring-red-500/30' },
-  info: { icon: 'ℹ️', ring: 'ring-sky-500/30' },
-}
+import { IconCheck, IconClose, IconSparkles } from './icons'
 
 export default function ToastContainer() {
   const { toasts, dismiss } = useToast()
+
+  const getIcon = (variant: 'success' | 'error' | 'info') => {
+    switch (variant) {
+      case 'success':
+        return <IconCheck className="h-4 w-4 text-emerald-400" />
+      case 'error':
+        return <IconClose className="h-4 w-4 text-rose-400" />
+      default:
+        return <IconSparkles className="h-4 w-4 text-[#c5a880]" />
+    }
+  }
 
   return (
     <div
@@ -19,10 +25,12 @@ export default function ToastContainer() {
           key={toast.id}
           type="button"
           onClick={() => dismiss(toast.id)}
-          className={`pointer-events-auto flex animate-slide-up cursor-pointer items-center gap-3 rounded-xl bg-ink-800/95 px-4 py-3 text-sm font-medium shadow-2xl ring-1 backdrop-blur ${VARIANTS[toast.variant].ring}`}
+          className="pointer-events-auto flex animate-slide-up cursor-pointer items-center gap-3 rounded-xl bg-[#161a22]/95 border border-white/10 px-4 py-3 text-xs font-medium text-neutral-200 shadow-xl backdrop-blur-md transition hover:border-white/20"
         >
-          <span>{VARIANTS[toast.variant].icon}</span>
-          {toast.message}
+          <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/[0.05]">
+            {getIcon(toast.variant)}
+          </span>
+          <span>{toast.message}</span>
         </button>
       ))}
     </div>
