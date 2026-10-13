@@ -9,13 +9,14 @@ Tüm veriler tarayıcının **LocalStorage** alanında saklanır, sayfa yenilens
 
 ## 📸 Ekran Görüntüleri
 
-| Ana Sayfa & Koleksiyon Listesi | Yeni Kayıt Ekleme Sayfası |
+| 1. Ana Sayfa & Koleksiyon Listesi | 2. Film/Dizi Detay İnceleme Modalı |
 | :---: | :---: |
-| ![Ana Sayfa](docs/ana-sayfa.png) | ![Ekleme Sayfası](docs/ekle-sayfasi.png) |
+| ![Ana Sayfa](docs/ana-sayfa.png) | ![Detay Modalı](docs/detay-modali.png) |
 
-| Kayıt Düzenleme Sayfası |
-| :---: |
-| ![Düzenleme Sayfası](docs/duzenle-sayfasi.png) |
+| 3. Kayıt Düzenleme & Canlı Önizleme | 4. Proje Hakkında & JSON Yedekleme |
+| :---: | :---: |
+| ![Düzenleme Sayfası](docs/duzenle-sayfasi.png) | ![Proje Hakkında](docs/proje-hakkinda.png) |
+
 
 ---
 
