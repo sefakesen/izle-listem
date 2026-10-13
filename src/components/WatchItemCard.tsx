@@ -23,7 +23,7 @@ export default function WatchItemCard({
   onSelect,
 }: WatchItemCardProps) {
   return (
-    <article className="card group flex animate-slide-up flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-white/20 hover:shadow-xl hover:shadow-black/50">
+    <article className="card group flex h-full animate-slide-up flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-white/20 hover:shadow-xl hover:shadow-black/50">
       {/* Afiş alanı */}
       <div
         className="relative aspect-[3/4] cursor-pointer overflow-hidden bg-neutral-950"
@@ -35,12 +35,16 @@ export default function WatchItemCard({
           posterUrl={item.posterUrl}
           className="transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#13161c] via-[#13161c]/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#13161c]/90 via-[#13161c]/30 to-transparent pointer-events-none" />
 
         {/* Tip etiketi */}
-        <span className="absolute left-3 top-3 flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-[11px] font-medium text-neutral-300 backdrop-blur-md border border-white/10">
-          {item.type === 'film' ? <IconFilm className="h-3 w-3 text-neutral-400" /> : <IconTv className="h-3 w-3 text-neutral-400" />}
-          {item.type === 'film' ? 'Film' : 'Dizi'}
+        <span className="absolute left-3 top-3 flex items-center gap-1 rounded-md bg-black/70 px-2 py-1 text-[11px] font-medium text-neutral-300 backdrop-blur-md border border-white/10 select-none">
+          {item.type === 'film' ? (
+            <IconFilm className="h-3 w-3 text-neutral-400" />
+          ) : (
+            <IconTv className="h-3 w-3 text-neutral-400" />
+          )}
+          <span>{item.type === 'film' ? 'Film' : 'Dizi'}</span>
         </span>
 
         {/* Favori butonu */}
@@ -52,7 +56,7 @@ export default function WatchItemCard({
           }}
           aria-label={item.favorite ? 'Favorilerden çıkar' : 'Favorilere ekle'}
           aria-pressed={item.favorite}
-          className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-black/60 backdrop-blur-md transition hover:scale-110 border border-white/10"
+          className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-black/70 backdrop-blur-md transition hover:scale-110 border border-white/10"
         >
           <IconHeart
             filled={item.favorite}
@@ -60,16 +64,17 @@ export default function WatchItemCard({
           />
         </button>
 
-        <div className="absolute bottom-3 left-3">
+        {/* Durum etiketi */}
+        <div className="absolute bottom-3 left-3 select-none">
           <StatusBadge status={item.status} />
         </div>
       </div>
 
       {/* İçerik */}
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <div>
+      <div className="flex flex-1 flex-col justify-between gap-3 p-4">
+        <div className="space-y-1">
           <h3
-            className="line-clamp-1 text-base font-semibold text-neutral-100 hover:text-white cursor-pointer"
+            className="line-clamp-1 text-base font-semibold text-neutral-100 hover:text-white cursor-pointer transition"
             title={item.title}
             onClick={() => onSelect?.(item)}
           >
@@ -80,22 +85,28 @@ export default function WatchItemCard({
           </p>
         </div>
 
-        <div className="flex items-center justify-between">
-          {item.rating > 0 ? (
-            <StarRating value={item.rating} size="sm" />
-          ) : (
-            <span className="text-[11px] text-neutral-500">Puanlanmadı</span>
-          )}
-          {item.type === 'dizi' && (item.season || item.episode) ? (
-            <span className="rounded-md bg-white/[0.04] border border-white/[0.08] px-1.5 py-0.5 font-mono text-[10px] text-neutral-400">
-              S{String(item.season ?? 1).padStart(2, '0')}·B{String(item.episode ?? 1).padStart(2, '0')}
-            </span>
-          ) : null}
-        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            {item.rating > 0 ? (
+              <StarRating value={item.rating} size="sm" />
+            ) : (
+              <span className="text-[11px] text-neutral-500">Puanlanmadı</span>
+            )}
+            {item.type === 'dizi' && (item.season || item.episode) ? (
+              <span className="rounded-md bg-white/[0.04] border border-white/[0.08] px-1.5 py-0.5 font-mono text-[10px] text-neutral-400">
+                S{String(item.season ?? 1).padStart(2, '0')}·B{String(item.episode ?? 1).padStart(2, '0')}
+              </span>
+            ) : null}
+          </div>
 
-        {item.notes && (
-          <p className="line-clamp-2 text-xs italic text-neutral-400">“{item.notes}”</p>
-        )}
+          <div className="min-h-[2rem]">
+            {item.notes ? (
+              <p className="line-clamp-2 text-xs italic text-neutral-400">“{item.notes}”</p>
+            ) : (
+              <p className="text-[11px] italic text-neutral-600">Not eklenmedi</p>
+            )}
+          </div>
+        </div>
 
         {/* İşlemler */}
         <div className="mt-auto flex items-center gap-1.5 pt-3 border-t border-white/[0.06]">

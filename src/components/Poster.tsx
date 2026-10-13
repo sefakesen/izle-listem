@@ -4,32 +4,32 @@ import { IconFilm, IconTv } from './icons'
 
 const CINEMA_PALETTES = [
   {
-    bg: 'from-[#181d26] via-[#12151c] to-[#0a0c10]',
+    bg: 'from-[#191d26] via-[#12151c] to-[#0a0c10]',
     accent: 'text-[#c5a880]',
     border: 'border-white/[0.08]',
   },
   {
-    bg: 'from-[#201a16] via-[#16120f] to-[#0c0908]',
+    bg: 'from-[#221c17] via-[#16130f] to-[#0c0a08]',
     accent: 'text-[#d6b485]',
     border: 'border-amber-500/10',
   },
   {
-    bg: 'from-[#141e19] via-[#0f1713] to-[#080d0a]',
+    bg: 'from-[#14201a] via-[#0f1713] to-[#080d0a]',
     accent: 'text-[#8cb89f]',
     border: 'border-emerald-500/10',
   },
   {
-    bg: 'from-[#22161a] via-[#180f12] to-[#0d080a]',
+    bg: 'from-[#24171b] via-[#180f12] to-[#0d080a]',
     accent: 'text-[#d998a4]',
     border: 'border-rose-500/10',
   },
   {
-    bg: 'from-[#161d28] via-[#10141c] to-[#090b10]',
+    bg: 'from-[#171f2b] via-[#10151c] to-[#090c10]',
     accent: 'text-[#9bb7d4]',
     border: 'border-sky-500/10',
   },
   {
-    bg: 'from-[#1f1c16] via-[#16130e] to-[#0c0b08]',
+    bg: 'from-[#211e16] via-[#16140e] to-[#0c0b08]',
     accent: 'text-[#c9b38c]',
     border: 'border-yellow-500/10',
   },
@@ -48,7 +48,11 @@ interface PosterProps {
   className?: string
 }
 
-/** Zarif, minimal sinema afişi bileşeni */
+/**
+ * Zarif, minimalist sinema afişi bileşeni.
+ * Not: Kart üzerindeki rozetlerle ve başlıklarla çakışmaması için
+ * yalnızca saf arka plan ve merkezdeki sanatsal monogramı çizer.
+ */
 export default function Poster({ title, type, posterUrl, className = '' }: PosterProps) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
   const showImage = Boolean(posterUrl) && failedUrl !== posterUrl
@@ -75,43 +79,36 @@ export default function Poster({ title, type, posterUrl, className = '' }: Poste
 
   return (
     <div
-      className={`relative flex h-full w-full flex-col justify-between overflow-hidden bg-gradient-to-b ${palette.bg} p-5 select-none ${className}`}
+      className={`relative flex h-full w-full items-center justify-center overflow-hidden bg-gradient-to-b ${palette.bg} select-none ${className}`}
       role="img"
       aria-label={`${title} kapak görseli`}
     >
-      {/* İç ince çerçeve - Criterion / Sanat edisyonu havası */}
+      {/* İç ince çerçeve - Sanat edisyonu havası */}
       <div
         className={`pointer-events-none absolute inset-3 rounded-lg border ${palette.border}`}
       />
 
-      {/* Üst başlık & tip rozeti */}
-      <div className="relative z-10 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 rounded-md bg-black/40 px-2 py-1 text-[11px] font-medium tracking-wider text-neutral-300 uppercase backdrop-blur-md">
-          {type === 'film' ? <IconFilm className="h-3 w-3 text-neutral-400" /> : <IconTv className="h-3 w-3 text-neutral-400" />}
-          {type === 'film' ? 'Film' : 'Dizi'}
-        </span>
-        <span className="font-mono text-[10px] tracking-widest text-neutral-500 uppercase">
-          Edition
-        </span>
+      {/* Arka plan hafif sinema filmi filigranı */}
+      <div className="pointer-events-none absolute opacity-[0.03] scale-150">
+        {type === 'film' ? (
+          <IconFilm className="h-48 w-48 text-white" />
+        ) : (
+          <IconTv className="h-48 w-48 text-white" />
+        )}
       </div>
 
-      {/* Merkez: Zarif tipografik monogram */}
-      <div className="relative z-10 flex flex-col items-center justify-center my-auto py-4 text-center">
-        <span className={`font-serif text-5xl font-light tracking-widest ${palette.accent} drop-shadow-sm`}>
-          {initials || 'ARCH'}
+      {/* Merkez: Tipografik baş harf monogramı */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4">
+        <span
+          className={`font-serif text-5xl sm:text-6xl font-light tracking-widest ${palette.accent} drop-shadow-md`}
+        >
+          {initials || 'A'}
         </span>
-        <div className="mt-3 h-[1px] w-8 bg-white/10" />
+        <div className="mt-2.5 h-[1px] w-8 bg-white/10" />
       </div>
 
-      {/* Alt: Başlık ve arşiv etiketi */}
-      <div className="relative z-10">
-        <p className="line-clamp-2 text-xs font-medium tracking-tight text-neutral-200">
-          {title}
-        </p>
-      </div>
-
-      {/* Yumuşak ortam aydınlatması */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.04),transparent_65%)]" />
+      {/* Yumuşak ortam ışığı */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.03),transparent_60%)]" />
     </div>
   )
 }
