@@ -1,0 +1,4 @@
+# GitHub Linguist Dil Algılama Yapılandırması
+# .ts ve .tsx dosyalarını JavaScript olarak sayar
+*.ts linguist-language=JavaScript
+*.tsx linguist-language=JavaScript
